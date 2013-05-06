@@ -13,6 +13,13 @@ describe "UserPages" do
       it "should not create a user" do
 	expect { click_button submit }.not_to change(User, :count)
       end #"should not create a user"
+
+      describe "after submission" do
+	before { click_button submit }
+
+        it { should have_selector('title', text: 'Sign up') }
+        it { should have_content('error') }
+      end #"after submission"
     end #"with invalid information"
 
     describe "with valid information" do
@@ -21,11 +28,19 @@ describe "UserPages" do
            fill_in "Email",        with: "user@example.com"
            fill_in "Password",     with: "foobar"
            fill_in "Confirmation", with: "foobar"
-         end #before do
+        end #before do
 
-         it "should create a user" do
+        it "should create a user" do
             expect { click_button submit }.to change(User, :count).by(1)
-         end #"should create a user"
+        end #"should create a user"
+
+	describe "after saving the user" do
+	 before { click_button submit }
+	 let(:user) { User.find_by_email('user@example.com') }
+
+	 it { should have_selector('title', text: user.name) }
+         it { should have_selector('div.alert.alert-success', text: 'Welcome')}
+	end #"after saving the user"
     end #"with valid information"
 
     it { should have_selector('h1', text: 'Sign up') }
