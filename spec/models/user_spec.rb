@@ -26,6 +26,7 @@ describe User do
   it { should respond_to(:password) }
   it { should respond_to(:password_confirmation) }
   it { should respond_to(:authenticate) }
+  it { should respond_to(:remember_token) }
   #it { should be_valid } は @user.should be_validの意味
   it { should be_valid }
 
@@ -110,4 +111,9 @@ describe User do
         specify { user_for_invalid_password.should be_false }
      end #"with invalid password"
   end #"return value of authenticate method"
+
+  describe "remember token" do
+    before { @user.save }
+    its(:remember_token) { should_not be_blank }
+  end #"remember token"
 end #User
